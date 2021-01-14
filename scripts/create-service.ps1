@@ -4,7 +4,7 @@ if ($args.Count -ne 1) {
 
 $params = @{
     Name           = "DropIt"
-    BinaryPathName = "'$($args[0])'"
+    BinaryPathName = "`"$($args[0])`""
     DisplayName    = "Drop It"
     StartupType    = "AutomaticDelayedStart"
     Description    = "Remote shutdown service"
