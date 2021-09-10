@@ -1,4 +1,5 @@
 use std::io;
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr};
 use std::process::Command;
 
 use actix_web::{get, App, HttpResponse, HttpServer, Responder};
@@ -13,12 +14,25 @@ async fn shutdown() -> impl Responder {
     HttpResponse::Ok().body("Bye!")
 }
 
-const SOCKET_ADDRESS: &str = "0.0.0.0:6916";
+pub struct Server {
+    port: u16,
+}
 
-pub fn run() -> io::Result<()> {
-    HttpServer::new(move || App::new().service(shutdown))
-        .bind(SOCKET_ADDRESS)?
-        .run();
+impl Server {
+    pub fn new(port: u16) -> Self {
+        Server { port }
+    }
 
-    Ok(())
+    pub fn run(&self) -> io::Result<()> {
+        let socket_addrs = vec![
+            SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), self.port),
+            SocketAddr::new(IpAddr::V6(Ipv6Addr::UNSPECIFIED), self.port),
+        ];
+
+        HttpServer::new(move || App::new().service(shutdown))
+            .bind(&*socket_addrs)?
+            .run();
+
+        Ok(())
+    }
 }
