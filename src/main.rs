@@ -7,7 +7,8 @@ const SERVICE_NAME: &str = "DropIt";
 define_windows_service!(ffi_service_main, service_main);
 
 fn service_main(_arguments: Vec<OsString>) {
-    drop_it::run(SERVICE_NAME).unwrap()
+    const PORT: u16 = 6916;
+    drop_it::run(SERVICE_NAME, PORT).unwrap()
 }
 
 fn main() -> windows_service::Result<()> {
