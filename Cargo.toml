@@ -1,7 +1,7 @@
 [package]
 authors = ["juanl"]
 edition = "2018"
-name = "drop-it-server"
+name = "drop-it"
 version = "0.1.0"
 
 [dependencies]
