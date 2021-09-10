@@ -1,5 +1,5 @@
 [package]
-authors = ["juanl"]
+authors = ["Juan Lledo <juan.lledo@hotmail.com>"]
 edition = "2018"
 name = "drop-it"
 version = "0.1.0"
