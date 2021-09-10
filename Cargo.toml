@@ -4,6 +4,12 @@ edition = "2018"
 name = "drop-it"
 version = "0.1.0"
 
+[package.metadata.winres]
+FileDescription = "Drop It"
+
+[build-dependencies]
+winres = "0.1.11"
+
 [dependencies]
 actix-web = "3.3.2"
 anyhow = "1.0.43"
