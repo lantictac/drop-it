@@ -1,17 +1,25 @@
 use std::io;
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr};
-use std::process::Command;
+use system_shutdown::shutdown_with_message;
 
-use actix_web::{get, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, App, HttpRequest, HttpResponse, HttpServer, Responder};
 
 #[get("/shutdown")]
-async fn shutdown() -> impl Responder {
-    Command::new("cmd")
-        .args(&["/C", "shutdown -s"])
-        .output()
-        .expect("failed to shutdown");
+async fn shutdown(req: HttpRequest) -> impl Responder {
+    let connection_info = req.connection_info();
+    let request_addr = match connection_info.realip_remote_addr() {
+        Some(addr) => addr,
+        None => "<unknown>",
+    };
 
-    HttpResponse::Ok().body("Bye!")
+    match shutdown_with_message(
+        format!("Drop-It shutdown invoked remotely by {request_addr}").as_str(),
+        10,
+        false
+    ) {
+        Ok(_) => HttpResponse::Ok().body("Bye!"),
+        Err(_error) => HttpResponse::InternalServerError().into(),
+    }
 }
 
 pub struct Server {
